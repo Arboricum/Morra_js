@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="it" dir='ltr'>
+<head>
+    <meta charset="utf-8"> <!-- Sempre per primo -->
+    <meta name="viewport"; content="width=device-width, initial-scale=1";>
+    <title>Morra</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            width: 100vw;
+            height: 80vh;
+            text-align: center;
+        }
+        .container div {
+            position: relative;
+            top: 20vh;
+        }
+        table {
+            border: 1px solid black;
+            margin-bottom: 10px;
+            width: 20vw;
+        }
+        td {
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <div>
+            <h2>Morra Cinese</h2>
+
+            <table>
+                <th>
+                    Punteggio
+                </th>
+                <tr>
+                    <td>Giocatore</td>
+                    <td id="playerWins">0</td>
+                </tr>
+                <tr>
+                    <td>PC</td>
+                    <td id="pcWins">0</td>
+                </tr>
+            </table>
+
+            <button type="button" name="Carta" onclick="play(this.name)">Carta</button>
+            <button type="button" name="Forbice" onclick="play(this.name)">Forbice</button>
+            <button type="button" name="Sasso" onclick="play(this.name)">Sasso</button>
+
+            <p id="playerValue"></p>
+            <p id="pcValue"></p>
+            <p id="result"></p>
+        </div>        
+    </main>
+</body>
+
+<script>
+
+const result = document.querySelector('#result');
+const playerValue = document.querySelector('#playerValue');
+const pcValue = document.querySelector('#pcValue');
+
+function play(value) {
+result.innerHTML = '';
+playerValue.innerHTML = '';
+pcValue.innerHTML = '';
+let pcValueRandom = Math.floor((Math.random() * 3) + 1);
+let pcValueRandomResult = '';
+    switch (pcValueRandom) {
+    case 1:
+    pcValueRandomResult = 'Carta';
+    break;
+
+    case 2:
+    pcValueRandomResult = 'Forbice';
+    break;
+
+    case 3:
+    pcValueRandomResult = 'Sasso';
+    break;
+    }
+
+let timer = new Promise (function(myResolve, myReject) {
+    setTimeout(()=>myResolve('Bim'), 300)
+    });
+
+    timer.then(function(value) {
+    result.innerHTML = value;
+    }).then(function() {
+        return new Promise (function(myResolve1, myReject1) {
+        setTimeout(()=>myResolve1('Bum'), 700)
+        }).then(function(value1) {
+        result.innerHTML = value1;
+        })
+    }).then(function() {
+        return new Promise (function(myResolve1, myReject1) {
+        setTimeout(()=>myResolve1('BAM!'), 700)
+        }).then(function(value1) {
+        result.innerHTML = value1;
+        })
+    }).then(function() {
+        return new Promise (function(myResolve1, myReject1) {
+        setTimeout(()=>myResolve1(), 700)
+        }).then(function() {
+            playerValue.innerHTML = 'Tiro del giocatore: <br><i>' + value + '</i>';
+            pcValue.innerHTML = 'Tiro del pc: <br><i>' + pcValueRandomResult + '</i>';
+            gameResult(value, pcValueRandomResult);
+        })
+    })
+}
+
+const playerWins = document.querySelector('#playerWins');
+const pcWins = document.querySelector('#pcWins');
+
+function gameResult(value, pcValueRandomResult) {
+  if (value === pcValueRandomResult) {
+    result.innerHTML = '<b>Parità</b>';
+  } else if (
+    (value === 'Carta' && pcValueRandomResult === 'Sasso') ||
+    (value === 'Sasso' && pcValueRandomResult === 'Forbice') ||
+    (value === 'Forbice' && pcValueRandomResult === 'Carta')
+  ) {
+    win('Il giocatore');
+    playerWins.innerHTML = playerWin();
+  } else {
+    win('Il pc');
+    pcWins.innerHTML = pcWin();
+  }
+}
+
+
+function win(winner) {
+result.innerHTML = `${winner} <b>vince questa mano</b>`;
+}
+
+function countPlayerWin() {
+let counter = 0;
+function winCounter() {counter += 1; return counter;}
+return winCounter;
+}
+const playerWin = countPlayerWin();
+
+function countPcWin() {
+let counter = 0;
+function winCounter() {counter += 1; return counter;}
+return winCounter;
+}
+const pcWin = countPcWin();
+</script>
+
+</html>
